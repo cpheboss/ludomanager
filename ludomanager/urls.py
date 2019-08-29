@@ -24,7 +24,7 @@ urlpatterns = [
 ]
 
 urlpatterns += [
-    path('ludomanagerapp', include('ludomanagerapp.urls')),
+    path('ludomanagerapp/', include('ludomanagerapp.urls')),
     path('', RedirectView.as_view(url='/ludomanagerapp/', permanent=True)),
 ]
 
