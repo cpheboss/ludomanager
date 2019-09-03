@@ -1,5 +1,8 @@
 from django.db import models
 from django.urls import reverse
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 # Create your models here.
 
@@ -18,12 +21,22 @@ class Member(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     add_date = models.DateField(auto_now_add=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.first_name + " " + self.last_name
 
     def get_absolute_url(self):
         return reverse('member-detail', args=[str(self.id)])
+
+@receiver(post_save, sender=User)
+def create_user_member(sender, instance, created, **kwargs):
+    if created:
+        Member.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_user_member(sender, instance, **kwargs):
+    instance.member.save()
 
 class GameSession(models.Model):
     date = models.DateField()
