@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 
@@ -14,7 +15,7 @@ class Game(models.Model):
     def get_absolute_url(self):
         return reverse('game-detail', args=[str(self.id)])
 
-class Member(models.Model):
+class Member(AbstractUser):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     add_date = models.DateField(auto_now_add=True)
@@ -24,6 +25,9 @@ class Member(models.Model):
 
     def get_absolute_url(self):
         return reverse('member-detail', args=[str(self.id)])
+
+    class Meta(AbstractUser.Meta):
+        pass
 
 class GameSession(models.Model):
     date = models.DateField()
